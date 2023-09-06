@@ -11,7 +11,11 @@
 <pre><code class="language-docker">docker run -p 5901:5901 -p 6080:6080 oommen81/xfce:latest
 </code></pre>
 
-<h1/>how to use the builder you can do<h1></h1>
+<h1/>how to use the builder<h1></h1>
+
+<h4>if you want to use the builder do<h4/>
 
 <pre><code class="language-bash">./builder.sh
 </code></pre>
+
+it should ask you for the name you want the image to be and make the image :]
