@@ -7,10 +7,6 @@ RUN git clone https://github.com/novnc/websockify /opt/noVNC/utils/websockify
 RUN apt install nano
 RUN export TERM=xterm 
 RUN export USER=root
-
-USER root
-WORKDIR /root/
-
 RUN echo -e "#!/bin/bash\nxrdb $HOME/.Xresources\nstartxfce4 &" > /root/.vnc/xstartup 
 RUN chmod +x ~/.vnc/xstartup
 
