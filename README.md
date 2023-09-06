@@ -11,4 +11,7 @@
 <pre><code class="language-docker">docker run -p 5901:5901 -p 6080:6080 oommen81/xfce:latest
 </code></pre>
 
+how to use the builder you can do
 
+<pre><code class="language-bash">./builder.sh
+</code></pre>
