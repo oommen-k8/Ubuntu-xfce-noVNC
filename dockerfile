@@ -1,7 +1,7 @@
 FROM oommen81/xfce:xfce-only
 RUN apt-get update && apt-get install -y
 
-RUN apt install git bash python3 xfce4-terminal -y 
+RUN apt install git bash python3 xfce4-terminal neofetch -y 
 RUN git clone https://github.com/novnc/noVNC /opt/noVNC
 RUN git clone https://github.com/novnc/websockify /opt/noVNC/utils/websockify
 RUN apt install nano
