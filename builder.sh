@@ -1,4 +1,4 @@
-!#/bin/bash
+#!/bin/bash
 
 echo what name do you what your image to be
 
