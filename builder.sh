@@ -10,6 +10,8 @@ read run
 
 echo building docker image
 
+docker pull oommen81/xfce:xfce-only
+
 docker build -t $name .
 
 sleep 3
