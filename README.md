@@ -8,7 +8,7 @@
 
   <h3>I left the dockerfile and other required files if you want to build using docker build<h3/>
 
-  <img src="https://raw.githubusercontent.com/oommen-k8/Ubuntu-xfce-noVNC/main/picture.png" width="600" height="400" alt="docker container running">
+  <img src="" width="600" height="400" alt="docker container running">
 
 <pre><code class="language-docker">docker run -p 5901:5901 -p 6080:6080 oommen81/xfce:latest
 </code></pre>
