@@ -10,10 +10,10 @@
 
   <img src="https://raw.githubusercontent.com/oommen-k8/Ubuntu-xfce-noVNC/main/picture.png" alt="docker container running">
 <br><br/>
-<pre><code class="language-docker">docker run -p 5901:5901 -p 6080:6080 oommen81/xfce:latest
-</code></pre>
+``
+docker run -p 5901:5901 -p 6080:6080 oommen81/xfce:latest
 
-# how to use the builder
+## how to use the builder
 
 <h4>if you want to use the builder do<h4/>
 
