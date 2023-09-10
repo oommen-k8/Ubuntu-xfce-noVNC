@@ -1,5 +1,7 @@
 # Ubuntu-xfce-noVNC
 
+[How to use Builder](docs/CONTRIBUTING.md)
+
 **The "Latest" image has  xfce and tightvnc installed with noVNC** 
 
 **The "XFCE-only" image has xfce and tightvnc installed only**
