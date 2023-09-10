@@ -10,8 +10,9 @@
 
   <img src="https://raw.githubusercontent.com/oommen-k8/Ubuntu-xfce-noVNC/main/picture.png" alt="docker container running">
 <br><br/>
-``
+```
 docker run -p 5901:5901 -p 6080:6080 oommen81/xfce:latest
+```
 
 ## how to use the builder
 
