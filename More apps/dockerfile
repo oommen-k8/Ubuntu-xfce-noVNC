@@ -1,0 +1,20 @@
+FROM oommen81/xfce:xfce-only
+RUN apt-get update && apt-get install -y
+
+RUN apt install git bash python3 neofetch python-pip xfce4-terminal -y
+RUN git clone https://github.com/novnc/noVNC /opt/noVNC
+RUN git clone https://github.com/novnc/websockify /opt/noVNC/utils/websockify
+RUN apt install nano
+RUN export TERM=xterm 
+RUN export USER=root
+RUN apt install python3-pip -y
+RUN pip3 install numpy
+RUN echo -e "#!/bin/bash\nxrdb $HOME/.Xresources\nstartxfce4 &" > /root/.vnc/xstartup 
+RUN chmod +x ~/.vnc/xstartup
+
+ADD entry.sh /entry.sh
+ADD Utils.sh /Utils.sh
+
+RUN cd /
+RUN bash /Utils.sh
+CMD [ "/bin/bash", "/entry.sh" ]
