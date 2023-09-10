@@ -1,6 +1,6 @@
 # Ubuntu-xfce-noVNC
 
-[How to use Builder](/README.md#how-to-use-the-builder)
+[How to use Builder](https://github.com/oommen-k8/Ubuntu-xfce-noVNC#how-to-use-the-builder)
 
 **The "Latest" image has  xfce and tightvnc installed with noVNC** 
 
