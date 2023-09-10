@@ -8,11 +8,15 @@ echo do you want to run this in background -d or foreground -it ?
 
 read run
 
+echo what image more apps or basic . mean basic ./More apps/dockerfile is more apps
+
+read path
+
 echo building docker image
 
 docker pull oommen81/xfce:xfce-only
 
-docker build -t $name .
+docker build -t $name $path
 
 sleep 3
 
