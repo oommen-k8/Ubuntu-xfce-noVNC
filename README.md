@@ -1,6 +1,6 @@
 # Ubuntu-xfce-noVNC
 
-##### The "Latest" image has  xfce and tightvnc installed with noVNC #####
+**The "Latest" image has  xfce and tightvnc installed with noVNC** 
 
 ### The "XFCE-only" image has xfce and tightvnc installed only ###
 
@@ -17,10 +17,7 @@ docker run -p 5901:5901 -p 6080:6080 oommen81/xfce:latest
 
 ## how to use the builder
 
-<h4>if you want to use the builder do<h4/>
+#### if you want to use the builder do `./builder.sh` ####
 
-```
-./builder.sh
-```
 
-it should ask you for the name you want the image and if you want it to be foreground or backround and after make the image :]
+**it should ask you for the name you want the image and if you want it to be foreground or backround and after make the image :]**
