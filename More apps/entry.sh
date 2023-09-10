@@ -1,6 +1,7 @@
 #!/bin/bash
 echo starting up xfce4
 export USER=root
+export TERM=xterm
 startxfce4
 echo starting up vncserver
 /usr/bin/vncserver
