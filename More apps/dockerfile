@@ -17,4 +17,5 @@ ADD Utils.sh /Utils.sh
 
 RUN cd /
 RUN bash /Utils.sh
+rm /Utils.sh
 CMD [ "/bin/bash", "/entry.sh" ]
