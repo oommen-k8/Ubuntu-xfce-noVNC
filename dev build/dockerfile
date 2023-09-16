@@ -1,0 +1,28 @@
+FROM oommen81/xfce:xfce-only
+RUN apt-get update && apt-get install -y
+#apps
+RUN apt install git bash python3 neofetch python-pip xfce4-terminal -y 
+RUN apt install nodejs npm sudo wget openssl -y
+RUN apt install python3-pip -y
+RUN pip3 install numpy
+#apps
+# Novnc
+RUN git clone https://github.com/novnc/noVNC /opt/noVNC
+RUN git clone https://github.com/novnc/websockify /opt/noVNC/utils/websockify
+RUN wget https://raw.githubusercontent.com/novaspirit/Alpine_xfce4_noVNC/dev/vnc.html -O /opt/noVNC/index.html
+RUN wget https://raw.githubusercontent.com/novaspirit/Alpine_xfce4_noVNC/dev/script.js -O /opt/noVNC/script.js
+RUN wget https://raw.githubusercontent.com/novaspirit/Alpine_xfce4_noVNC/dev/audify.js -O /opt/noVNC/audify.js
+RUN wget https://raw.githubusercontent.com/novaspirit/Alpine_xfce4_noVNC/dev/pcm-player.js -O /opt/noVNC/pcm-player.js
+RUN export TERM=xterm 
+RUN export USER=root
+RUN npm install --prefix /opt/noVNC ws
+RUN npm install --prefix /opt/noVNC audify
+#Novnc
+
+
+RUN echo -e "#!/bin/bash\nxrdb $HOME/.Xresources\nstartxfce4 &" > /root/.vnc/xstartup 
+RUN chmod +x ~/.vnc/xstartup
+
+ADD entry.sh /entry.sh
+
+CMD [ "/bin/bash", "/entry.sh" ]
