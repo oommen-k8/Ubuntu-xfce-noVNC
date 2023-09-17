@@ -1,12 +1,12 @@
 //Audify audio : https://almoghamdani.github.io/audify/index.html
 const WebSocket = require('ws')
 
-var wss = new WebSocket.Server({
+var ws = new WebSocket.Server({
     port: 56780
 });
 
 console.log('Server ready...')
-wss.on('connection', function connection(ws) {
+ws.on('connection', function connection(ws) {
     console.log('Socket connected. sending data...')
 })
 
@@ -34,7 +34,7 @@ rtAudio.openStream({
     480, // Frame size is 1920 (40ms)
     "MyStream", // The name of the stream (used for JACK Api)
     pcm => {
-        wss.clients.forEach(function each(client) {
+        ws.clients.forEach(function each(client) {
             if (client.readyState === WebSocket.OPEN) {
                 client.send(pcm)
             }
