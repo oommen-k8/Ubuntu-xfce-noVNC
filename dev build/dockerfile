@@ -2,7 +2,8 @@ FROM oommen81/xfce:xfce-only
 RUN apt-get update && apt-get install -y
 #apps
 RUN apt install git bash python3 neofetch python-pip xfce4-terminal -y 
-RUN apt install nodejs npm sudo wget openssl -y
+RUN apt install nodejs npm sudo wget openssl pulseaudio -y
+RUN apt-get -y install pavucontrol
 RUN apt install python3-pip -y
 RUN pip3 install numpy
 #apps
