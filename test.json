@@ -9,7 +9,6 @@
       "platform": "linux",
       "logo": "https://portainer-io-assets.sfo2.digitaloceanspaces.com/logos/registry.png",
       "image": "oommen81/xfce:latest",
-      "ports": ["5000/tcp"],
-      "volumes": [
+      "ports": ["6080/tcp"],
         {
           "container": "/var/lib/registry"
