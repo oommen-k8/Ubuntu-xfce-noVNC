@@ -12,3 +12,4 @@
       "ports": ["6080/tcp"],
         {
           "container": "/var/lib/registry"
+        }
