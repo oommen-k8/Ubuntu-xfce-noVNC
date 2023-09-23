@@ -1,29 +1,142 @@
-name: Docker Buildx Bake
-  # You may pin to the exact commit or the version.
-  # uses: docker/bake-action@511fde2517761e303af548ec9e0ea74a8a100112
-uses: docker/bake-action@v4.0.0
-  with:
-    # Builder instance
-    builder: # optional
-    # List of bake definition files
-    files: 
-    # Working directory of bake execution
-    workdir: # optional, default is .
-    # List of bake targets
-    targets: # optional
-    # Do not use cache when building the image
-    no-cache: # optional, default is false
-    # Always attempt to pull a newer version of the image
-    pull: # optional, default is false
-    # Load is a shorthand for --set=*.output=type=docker
-    load: # optional, default is false
-    # Provenance is a shorthand for --set=*.attest=type=provenance
-    provenance: # optional
-    # Push is a shorthand for --set=*.output=type=registry
-    push: # optional, default is false
-    # SBOM is a shorthand for --set=*.attest=type=sbom
-    sbom: # optional
-    # List of targets values to override (eg. targetpattern.key=value)
-    set: # optional
-    # Remote bake definition to build from
-    source: # optional
+name: 🐳 Docker Buildx Workflow
+
+# This workflow uses actions that are not certified by GitHub.
+# They are provided by a third-party and are governed by
+# separate terms of service, privacy policy, and support
+# documentation.
+
+on:
+  push:
+    branches:
+      - 'main'
+    tags:
+      - 'v*.*.*'
+  pull_request:
+    branches:
+      - 'main'
+  workflow_call:
+    inputs:
+      platforms:
+        description: 'target platforms to build docker images'
+        default: 'linux/amd64,linux/arm64'
+        required: false
+        type: string
+      registry: 
+        description: 'container registry'
+        default: 'ghcr.io'
+        required: false
+        type: string
+      image_name:
+        description: 'name of the docker image'
+        default: ${{ github.repository }}
+        required: false
+        type: string
+      tags:
+        description: 'image tags based on the following events/attributes'
+        default: '' # see below at step 'Get tags'
+        required: false
+        type: string
+
+
+env:
+  REGISTRY: ${{ inputs.registry || 'ghcr.io' }}
+  IMAGE_NAME: ${{ inputs.image_name || github.repository }}
+  PLATFORMS: ${{ inputs.platforms || 'linux/amd64,linux/arm64' }}
+  TAGS: ${{ inputs.tags }}
+
+jobs:
+  build:
+
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      packages: write
+#      # This is used to complete the identity challenge
+#      # with sigstore/fulcio when running outside of PRs.
+#      id-token: write
+
+    steps:
+      # if env.TAGS not set fallback to default
+      - name: Get tags
+        # needed to workaround multiline string
+        if: ${{ !env.TAGS }}
+        run: |
+          DEFAULT_TAGS=$(cat << EOF
+          type=schedule
+          type=ref,event=branch
+          type=ref,event=pr
+          type=semver,pattern={{version}}
+          type=semver,pattern={{major}}.{{minor}}
+          type=semver,pattern={{major}}
+          type=sha
+          EOF
+          )
+          echo "TAGS<<EOF" >> $GITHUB_ENV
+          echo "$DEFAULT_TAGS" >> $GITHUB_ENV
+          echo "EOF" >> $GITHUB_ENV
+
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Lint Dockerfile
+        uses: hadolint/hadolint-action@54c9adbab1582c2ef04b2016b760714a4bfde3cf
+        with:
+          verbose: true
+
+#      # Install the cosign tool except on PR
+#      # https://github.com/sigstore/cosign-installer
+#      - name: Install cosign
+#        if: github.event_name != 'pull_request'
+#        uses: sigstore/cosign-installer@536b37ec5d5b543420bdfd9b744c5965bd4d8730
+
+      # Install QEMU for target platform emulation (i.e. arm64)
+      - name: Set up QEMU
+        uses: docker/setup-qemu-action@68827325e0b33c7199eb31dd4e31fbe9023e06e3
+
+      # Workaround: https://github.com/docker/build-push-action/issues/461
+      - name: Setup Docker buildx
+        uses: docker/setup-buildx-action@f95db51fddba0c2d1ec667646a06c2ce06100226
+
+      # Login against a Docker registry except on PR
+      # https://github.com/docker/login-action
+      - name: Log into registry ${{ env.REGISTRY }}
+        if: github.event_name != 'pull_request'
+        uses: docker/login-action@343f7c4344506bcbf9b4de18042ae17996df046d
+        with:
+          registry: ${{ env.REGISTRY }}
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+
+      # Extract metadata (tags, labels) for Docker
+      # https://github.com/docker/metadata-action
+      - name: Extract Docker metadata
+        id: meta
+        uses: docker/metadata-action@96383f45573cb7f253c731d3b3ab81c87ef81934
+        with:
+          images: ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}
+          tags: ${{ env.TAGS }}
+
+      # Build and push Docker image with Buildx (don't push on PR)
+      # https://github.com/docker/build-push-action
+      - name: Build and push Docker image
+        id: build-and-push
+        uses: docker/build-push-action@0565240e2d4ab88bba5387d719585280857ece09
+        with:
+          context: .
+          platforms: ${{ env.PLATFORMS }}
+          push: ${{ github.event_name != 'pull_request' }}
+          tags: ${{ steps.meta.outputs.tags }}
+          labels: ${{ steps.meta.outputs.labels }}
+
+#      # Sign the resulting Docker image digest except on PRs.
+#      # This will only write to the public Rekor transparency log when the Docker
+#      # repository is public to avoid leaking data.  If you would like to publish
+#      # transparency data even for private images, pass --force to cosign below.
+#      # https://github.com/sigstore/cosign
+#      - name: Sign the published Docker image
+#        if: ${{ github.event_name != 'pull_request' }}
+#        env:
+#          COSIGN_EXPERIMENTAL: "true"
+#        # This step uses the identity token to provision an ephemeral certificate
+#        # against the sigstore community Fulcio instance.
+#        run: cosign sign ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}@${{ steps.build-and-push.outputs.digest }}
