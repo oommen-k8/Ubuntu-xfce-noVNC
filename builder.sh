@@ -4,6 +4,10 @@ echo what name do you what your image to be
 
 read name
 
+echo what do you want the container name to be
+
+read containername
+
 echo do you want to run this in background -d or foreground -it ?
 
 read run
